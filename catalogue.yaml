@@ -1,6 +1,6 @@
 - name: configure catalogue
-  become: yes
   hosts: catalogue
+  become: yes
   tasks: 
     - name: uninstall nodejs
       ansible.builtin.dnf:
