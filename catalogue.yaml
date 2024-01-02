@@ -16,7 +16,7 @@
     
     - name: create app directory 
       ansible.builtin.file: 
-        path: app 
+        path: /app 
         state: directory  
 
     - name: download application code
@@ -27,7 +27,7 @@
     - name: unarchive
       ansible.builtin.unarchive: 
         src: /tmp/catalogue.zip
-        dest: app
+        dest: /app
         remote_src: yes 
 
     - name: install npm dependencies 
