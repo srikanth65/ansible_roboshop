@@ -1,0 +1,33 @@
+- name: setup mongodb
+  hosts: mongodb
+  become: yes
+  tasks: 
+    - name: copy mongo.repo
+      ansible.builtin.copy: 
+        src: mongo.repo
+        target: /etc/yum.repos.d/mongo.repo
+        remote_src: yes 
+
+    - name: Install the latest version of mongodb 
+      ansible.builtin.dnf:
+        name: mongodb-org
+        state: present 
+
+    - name: service start and enable
+      ansible.builtin.service:
+        name: mongod 
+        state: started
+        enabled: yes 
+
+    - name: update lisen address from 127.0.0.1 to 0.0.0.0 in /etc/mongod.conf 
+      #ansible.builtin.command: sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mongod.conf 
+      ansible.builtin.replace: 
+        path: /etc/mongod.conf
+        regexp: '127.0.0.1'
+        replace: '0.0.0.0'
+
+    - name: service start and enable
+      ansible.builtin.service:
+        name: mongod 
+        state: restarted
+    

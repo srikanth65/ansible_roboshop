@@ -1,0 +1,78 @@
+- name: user
+  hosts: user
+  become: yes
+  tasks: 
+    - name: disable nodejs 
+      ansible.builtin.dnf: 
+        name: nodejs 
+        state: absent
+
+    - name: enable nodejs
+      ansible.builtin.dnf: 
+        name: 'nodejs:18'
+        state: present 
+
+    - name: add user roboshop 
+      ansible.builtin.user: 
+        name: roboshop 
+
+    - name: remove app directory 
+      ansible.builtin.file: 
+        path: /app 
+        state: absent 
+
+    - name: app directory 
+      ansible.builtin.file: 
+        path: /app
+        state: directory 
+    
+    - name: download application code 
+      ansible.builtin.get_url:
+        url: https://roboshop-builds.s3.amazonaws.com/user.zip
+        dest: /tmp 
+
+    - name: unzip user.zip 
+      ansible.builtin.unarchive: 
+        src: /tmp/user.zip 
+        dest: /app
+        remote_src: yes 
+
+    - name: download dependencies 
+      ansible.builtin.command: npm install 
+      args: 
+        chdir: /app 
+
+    - name: user.service in systemd 
+      ansible.builtin.copy: 
+        src: /user.service
+        dest: /etc/systemd/system/user.service
+        remote_src: yes 
+
+    - name: sytemctl daemon reload 
+      ansible.builtin.systemd_service:
+        daemon_reload: true 
+
+    - name: copy files mongo.repo 
+      ansible.builtin.copy: 
+        src: /mongo.repo
+        dest: /etc/yum.repos.d/mongo.repo
+        remote_src: yes
+
+    - name: get the users count
+      ansible.builtin.command:  mongo --host mongodb.aws2day.online --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
+      register: user_count
+
+    - name: load user data
+      ansible.builtin.command: mongo --host mongodb.aws2day.online < /app/schema/user.js
+      when: user_count.stdout == "0" # keep double quotes
+
+    - name: install mongodb-org-shell 
+      ansible.builtin.dnf: 
+        name: mongodb-org-shell
+        state: present 
+    
+    - name: start and enable 
+      ansible.builtin.service:
+        name: user 
+        state: restarted
+        enabled: yes 
