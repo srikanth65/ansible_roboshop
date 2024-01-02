@@ -2,14 +2,12 @@
   hosts: user
   become: yes
   tasks: 
-    - name: disable nodejs 
-      ansible.builtin.dnf: 
-        name: nodejs 
-        state: absent
+    - name: disable old nodejs and enable nodejs
+      ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
 
     - name: enable nodejs
       ansible.builtin.dnf: 
-        name: 'nodejs:18'
+        name: nodejs
         state: present 
 
     - name: add user roboshop 
@@ -46,8 +44,7 @@
       ansible.builtin.copy: 
         src: /user.service
         dest: /etc/systemd/system/user.service
-        remote_src: yes 
-
+    
     - name: sytemctl daemon reload 
       ansible.builtin.systemd_service:
         daemon_reload: true 
@@ -56,7 +53,6 @@
       ansible.builtin.copy: 
         src: /mongo.repo
         dest: /etc/yum.repos.d/mongo.repo
-        remote_src: yes
 
     - name: get the users count
       ansible.builtin.command:  mongo --host mongodb.aws2day.online --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
