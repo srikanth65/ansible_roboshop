@@ -11,6 +11,7 @@
       ansible.builtin.service:
         name: nginx
         state: started
+        enabled: yes
       
     
     - name: remove the default content that web server is serving 
