@@ -27,13 +27,10 @@
         dest: /usr/share/nginx/html
         remote_src: yes
 
-    - name: create a directory and file
-      ansible.builtin.command: mkdir -p /etc/nginx/default.d/roboshop.conf
-
     - name: copy roboshop.conf 
       ansible.builtin.copy:
         src: roboshop.conf
-        dest: /etc/nginx/default.d/roboshop.conf 
+        dest: /etc/nginx/default.d/roboshop.conf
 
     - name: Start service and enable
       ansible.builtin.service:
