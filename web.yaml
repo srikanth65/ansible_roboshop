@@ -11,7 +11,7 @@
       ansible.builtin.service:
         name: nginx
         state: started
-        enabled: true
+      
     
     - name: remove the default content that web server is serving 
       ansible.builtin.command: rm -rf /usr/share/nginx/html/*
