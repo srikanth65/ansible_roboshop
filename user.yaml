@@ -42,7 +42,7 @@
 
     - name: user.service in systemd 
       ansible.builtin.copy: 
-        src: /user.service
+        src: user.service
         dest: /etc/systemd/system/user.service
     
     - name: sytemctl daemon reload 
@@ -51,22 +51,22 @@
 
     - name: copy files mongo.repo 
       ansible.builtin.copy: 
-        src: /mongo.repo
+        src: mongo.repo
         dest: /etc/yum.repos.d/mongo.repo
 
+    - name: install mongodb-org-shell 
+      ansible.builtin.dnf: 
+        name: mongodb-org-shell
+        state: present 
+
     - name: get the users count
-      ansible.builtin.command:  mongo --host mongodb.aws2day.online --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
+      ansible.builtin.command: mongo --host mongodb.aws2day.online --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
       register: user_count
 
     - name: load user data
       ansible.builtin.command: mongo --host mongodb.aws2day.online < /app/schema/user.js
       when: user_count.stdout == "0" # keep double quotes
 
-    - name: install mongodb-org-shell 
-      ansible.builtin.dnf: 
-        name: mongodb-org-shell
-        state: present 
-    
     - name: start and enable 
       ansible.builtin.service:
         name: user 
