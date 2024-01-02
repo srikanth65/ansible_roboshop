@@ -5,6 +5,11 @@
     - name: disable old nodejs and enable nodejs
       ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
    
+    - name: install nodeJS 
+      ansible.builtin.dnf: 
+        name: nodejs 
+        state: present 
+
     - name: add user roboshop
       ansible.builtin.user: 
         name: roboshop
