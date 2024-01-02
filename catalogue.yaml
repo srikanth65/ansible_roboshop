@@ -2,16 +2,9 @@
   hosts: catalogue
   become: yes
   tasks: 
-    - name: uninstall nodejs
-      ansible.builtin.dnf:
-        name: nodejs 
-        state: absent 
-
-    - name: install nodejs18
-      ansible.builtin.dnf:
-        name: 'nodejs:18'
-        state: present 
-
+    - name: disable old nodejs and enable nodejs
+      ansible.builtin.command: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
+   
     - name: add user roboshop
       ansible.builtin.user: 
         name: roboshop
