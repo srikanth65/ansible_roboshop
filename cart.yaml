@@ -2,14 +2,12 @@
   hosts: cart
   become: yes
   tasks: 
-    - name: disable nodejs 
-      ansible.builtin.dnf: 
-        name: nodejs 
-        state: absent
+    - name: disable old nodejs and enable nodejs
+      ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
 
     - name: enable nodejs
       ansible.builtin.dnf: 
-        name: 'nodejs:18'
+        name: nodejs
         state: present 
 
     - name: add user roboshop 
@@ -44,7 +42,7 @@
 
     - name: cart.service in systemd 
       ansible.builtin.copy: 
-        src: /cart.service
+        src: cart.service
         dest: /etc/systemd/system/cart.service
         remote_src: yes 
 
