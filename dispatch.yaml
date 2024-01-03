@@ -12,7 +12,9 @@
         name: roboshop 
     
     - name: app directory
-      ansible.builtin.command: mkdir /app 
+      ansible.builtin.file: 
+        path: /app
+        state: directory 
 
     - name: download application code 
       ansible.builtin.get_url:
