@@ -21,7 +21,7 @@
 
     - name: download application code to app directory
       ansible.builtin.get_url:
-        src: https://roboshop-builds.s3.amazonaws.com/payment.zip
+        url: https://roboshop-builds.s3.amazonaws.com/payment.zip
         dest: /tmp 
 
     - name: unarchive
