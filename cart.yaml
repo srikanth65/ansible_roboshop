@@ -44,7 +44,6 @@
       ansible.builtin.copy: 
         src: cart.service
         dest: /etc/systemd/system/cart.service
-        remote_src: yes 
 
     - name: sytemctl daemon reload 
       ansible.builtin.systemd_service:
