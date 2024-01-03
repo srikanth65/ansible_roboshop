@@ -25,6 +25,7 @@
       ansible.builtin.unarchive: 
         src: /tmp/dispatch.zip
         dest: /app
+        remote_src: yes
 
     - name: install requirements 
       ansible.builtin.shell: go mod init dispatch; go get; go build 
