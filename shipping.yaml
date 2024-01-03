@@ -57,7 +57,7 @@
       ansible.builtin.service:
         state: restarted
         name: shipping 
-        enable: true 
+        enable: yes 
 
     - name: install mysql 
       ansible.builtin.dnf: 
