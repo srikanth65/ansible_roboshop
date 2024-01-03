@@ -73,7 +73,7 @@
         msg: "schema output: {{schema}}"
 
     - name: load schema 
-      ansible.builtin.command: mysql -h mysql.aws2day.online -uroot -p{{mysql_password}} < /app/schema/shipping.sql 
+      ansible.builtin.command: "mysql -h mysql.aws2day.online -uroot -p{{mysql_password}} < /app/schema/shipping.sql" 
       when: schema.stdout != "1"
       
     - name: restart 
